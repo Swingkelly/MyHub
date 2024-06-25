@@ -4,13 +4,22 @@
 <title> Mazie's Home </title>
 <style> 
     body{
-        background-color: rgb(221, 240, 229);
+        background-color: rgb(250, 239, 209);
     }
     h1{
-        color: rgb(54, 90, 52);
+        color: rgb(233, 160, 50);
         text-align: center;
         font-style: oblique;
     }
+    
+    h3{
+        color:rgb(233, 160, 50);
+    }
+    canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 0 auto;
+        }
 </style>
 </head>
 <body>
@@ -20,17 +29,101 @@
         <source src="cartoon-style winnie the pooh skipping down a dirt road in the forest. Side angle  view. -2b6569.mp4" type="video/mp4">
         Your browser doesn't support the video tag.
       </video>
+      
 <h3> more about me </h3>
+
 <p>
-        I'm a high school student from the beautiful state of Minnesota, with a passion for learning and a love for both academic pursuits and leisure activities.
-    My academic interests are diverse, but I particularly excel in reading and mathematics. There's nothing quite like getting lost in a good book or solving a challenging math problem. These subjects not only fuel my curiosity but also help me develop critical thinking skills that I apply to various aspects of my life.
-    When I'm not hitting the books, you'll often find me immersed in the world of video games. I enjoy the strategic thinking, problem-solving, and creativity that many games require.
+        I'm a high school student from the state of Minnesota, with a passion for learning and a love for both academic pursuits and leisure activities.
+    My academic interests are diverse, but I particularly excel in reading and mathematics. I enjoy getting lost in a good book or solving a challenging math problem. These subjects not only fuel my curiosity but also help me develop critical thinking skills that I apply to various aspects of my life.
+    When I'm not hitting the books, you'll often find me immersed in the world of video games. I love the strategic thinking, problem-solving, and creativity that many games require.
     During the summer months, I dedicate my time to volunteering at a local camp. This experience has been incredibly rewarding, allowing me to give back to my community while developing leadership skills and making lasting memories.
     Family is a central part of my life, and I cherish the moments we spend together. Our household is lively and full of love, thanks in part to our four-legged (and spiky!) family members - two playful dogs and two adorable hedgehogs. They bring joy and laughter to our daily lives and have taught me valuable lessons about responsibility and care.
     Through this website, I hope to share more about my interests, experiences, and thoughts. Feel free to explore and get to know me better!
        
 </p>
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const pooh = {
+            x: 200,
+            y: 350,
+            width: 50,
+            height: 50,
+            speed: 7
+        };
+
+        const honeyPot = {
+            x: Math.random() * (canvas.width - 30),
+            y: 0,
+            width: 30,
+            height: 30,
+            speed: 3
+        };
+
+        let score = 0;
+
+        function drawPooh() {
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(pooh.x, pooh.y, pooh.width, pooh.height);
+        }
+
+        function drawHoneyPot() {
+            ctx.fillStyle = 'gold';
+            ctx.fillRect(honeyPot.x, honeyPot.y, honeyPot.width, honeyPot.height);
+        }
+
+        function drawScore() {
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 30);
+        }
+
+        function movePooh(e) {
+            if (e.key === 'ArrowLeft' && pooh.x > 0) {
+                pooh.x -= pooh.speed;
+            } else if (e.key === 'ArrowRight' && pooh.x < canvas.width - pooh.width) {
+                pooh.x += pooh.speed;
+            }
+        }
+
+        function updateHoneyPot() {
+            honeyPot.y += honeyPot.speed;
+            if (honeyPot.y > canvas.height) {
+                resetHoneyPot();
+            }
+        }
+
+        function resetHoneyPot() {
+            honeyPot.x = Math.random() * (canvas.width - honeyPot.width);
+            honeyPot.y = 0;
+        }
+
+        function checkCollision() {
+            if (
+                pooh.x < honeyPot.x + honeyPot.width &&
+                pooh.x + pooh.width > honeyPot.x &&
+                pooh.y < honeyPot.y + honeyPot.height &&
+                pooh.y + pooh.height > honeyPot.y
+            ) {
+                score++;
+                resetHoneyPot();
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPooh();
+            drawHoneyPot();
+            drawScore();
+            updateHoneyPot();
+            checkCollision();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', movePooh);
+        gameLoop();
+    </script>
 </body>
-
 </html>
-
